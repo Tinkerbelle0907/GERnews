@@ -1,0 +1,6 @@
+exportPattern(get_spiegel(), get_faz(), see.freq(), get_zeit(), get_articles())
+
+import(XML, RCurl, stringr, httr, ggplot2)
+
+
+

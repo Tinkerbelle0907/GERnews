@@ -1,0 +1,23 @@
+Package: GERnews
+Title: GERnews simplifies online media research 
+Version: 1.0
+Date: 2015-02-23
+Authors@R: c(person("Isabelle", "Bonenkamp", role = c("aut", "cre"),
+            email = "i.bonenkamp@live.de"),
+             person("Friedrike", "Preu", role = "ctb"))
+Author: Isabelle Bonenkamp [aut, cre],
+         Friedrike Preu [ctb],
+Maintainer: Isabelle Bonenkamp <i.bonenkamp@live.det>
+Depends: R (>= 3.1.0), nlme
+Imports: 
+      XML,
+      httr,
+      stringr,
+      RCurl,
+      ggplot2
+Suggests: 
+      testthat
+Description: GERnews simplifies online media research. It allows to access the search engines of the German online newspapers Faz, Spiegel and Zeit in RStudio and thus enables the user to scrape headlines (and articles) from the online archives. Further, the package provides sorting and visualizing the extracted informations. 
+License: No commercial use. Feel free to copy
+BugReports: https://github.com/Tinkerbelle0907
+LazyData: true
