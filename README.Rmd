@@ -1,15 +1,235 @@
 ---
+title: Introducing GERnews -Easy acces to German online newspapers
+  
+author: "Isabelle Bonenkamp"
 output:
-  md_document:
-    variant: markdown_github
+  html_document:
+    keep_md: yes
+    self_contained: no
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+`r Sys.Date()`
 
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
-)
+## Introduction
+
+"Anything that can be automated, should be automated"
+                                 - Hadley Wickham
+
+GERnews is my first try to automate online media research for all cases in a package. It can be extended for any online media outlet there is and is definetely in need for continous improvement. So far, this is what we have: 
+
+GERnews simplifies online media research. It allows to access the search engines of the German online newspapers Faz, Spiegel and Zeit in RStudio and thus enables the user to scrape headlines (and articles) from the online archives. The package does not provide full equipment for sorting and visualizing the extracted informations but gives you examplary functions for what you can construct with it. 
+
+## What arguments?
+
+```{r}
+require(GERnews)
 ```
+
+There are three basic functions: get_spiegel(), get_faz() and get_zeit(). They all have a similar structure but there a tiny differences considering the usage. Lets explain the several arguments:
+
+*1*. get_spiegel()
+
+- **topic**        [ `"Ostern"` ]: <br>
+... here you type in the topic you wish to gain more information about. There are search aids which are explained furhter in 'Seach aids'...
+
+- **from**        [ `"01.04.2015"` ]: <br>
+... starting date of the timespan to be considered
+
+- **to**          [ `"15.04.2015"` ]: <br>
+... end date of the timespan to be considered
+
+- **area**        ['"kopftext" OR ""']: <br>
+... do you want to search in full text or only through headlines (= kopftext)? 
+
+- **email**       ['"Your@email.com"']: <br>
+...Here you type in your email address. By applying this argument,  you are being friendly to the newspaper server and it may help to prevent any legal copyright issues. Remind yourself that technically, you are copying the work of others.  
+
+
+*2*. get_faz() 
+
+This is nearly the same as above:
+
+- **topic**        [ `"Ostern"` ]: <br>
+... here you type in the topic you wish to gain more information about. There are search aids which are explained furhter in 'Seach aids'...
+
+- **from**        [ `"01.04.2015"` ]: <br>
+... starting date of the timespan to be considered
+
+- **to**          [ `"15.04.2015"` ]: <br>
+... end date of the timespan to be considered
+
+- **area**        ['"TI" OR "q"']: <br>
+... do you want to search in full text (=q) or only through headlines (= TI)? 
+
+- **email**       ['"Your@email.com"']: <br>
+...Here you type in your email address. By applying this argument,  you are being friendly to the newspaper server and it may help to prevent any legal copyright issues. Remind yourself that technically, you are copying the work of others.  
+
+
+*3*. get_faz() 
+
+This is also quite similar. However there is no area to choose as Zeit Online does not allow any other search than in plain text. 
+
+- **topic**        [ `"Ostern"` ]: <br>
+... here you type in the topic you wish to gain more information about. Zeit Online does not have any search aids. 
+
+- **from**        [ `"01.04.2015"` ]: <br>
+... starting date of the timespan to be considered
+
+- **to**          [ `"15.04.2015"` ]: <br>
+... end date of the timespan to be considered
+
+- **email**       ['"Your@email.com"']: <br>
+...Here you type in your email address. By applying this argument,  you are being friendly to the newspaper server and it may help to prevent any legal copyright issues. Remind yourself that technically, you are copying the work of others.  
+
+
+
+## Let's have a first run
+
+For our first example, we use the get_faz() function. 
+So you build a first faz data frame:
+
+```{r, cache=TRUE}
+ostern_df <- get_faz(topic="Ostern", from="01.01.2013", to="10.04.2015", area="TI", email="Your@email.com")
+```
+The function's return is a data frame with threee variables *date*, *headlines* and *links*:
+
+```{r, cache=TRUE}
+
+head(ostern_df$headlines)
+head(ostern_df$links)
+```
+
+We can use this information to retrieve the 'topic trend'. In this case for instance, you can check how often "Ostern" has been mentioned in headlines and in what months since 2013: 
+
+```{r, cache=TRUE}
+
+as.data.frame(table(faz_df$months))
+```
+
+If you think of a title we can also visualize this information with *see_freq()*. The arguments are:
+
+- **faz_df**        [ `"ostern_df"` ]: <br>
+... here you type in the data frame you have built before with the get_faz() function 
+
+- **title**        [ `"Easter in FAZ headlines"` ]: <br>
+... here you type in the title for your graph
+
+
+However *see_freq()* only is an exemplary function what you can do with the retrieved material from all the three basic GERnews functions. 
+Here you see how it could look when visualizing with ggplot2:
+
+
+```{r, cache=TRUE}
+
+see_freq(ostern_df, title="Easter in FAZ headlines")
+```
+
+Looking at the graph we can conclude that *Ostern* almost only appaers in headlines just before, during and right after easter :) 
+
+
+## Download
+
+You can, of course, download the articles once you have retrieved the links with the GERnews functions. This can be of use when you are not only interested in the frequency of mentioning but also in text anaysis for example. 
+
+I have almost completely copied a friendly download function from
+
+*Munzert, Simon, Christian Rubba, Peter Meißner, und Dominic Nyhuis (2014): Automated Data Collection with R. A Practical Guide to Web Scraping and Text Mining for the Social Sciences. Hoboken, NJ: John Wiley & Sons. Manuskript.*
+ 
+Please consider this book further if you wish to download considerable amounts of articles. Never forget that there might come copyright issues. 
+
+Note that you can neither access nor download the faz articles anyway, unless creating a user account and paying a monthly fee. 
+
+However, here is the function I used: 
+
+```{r, cache=TRUE}
+
+download.art <- function(pageurl, folder, handle) {
+  
+  dir.create(folder, showWarnings = FALSE)
+  
+  page_name <- str_c(str_extract(pageurl, "/P.+"), ".html")
+  
+  if (page_name == "NA.html") { page_name <- "/base.html" }
+  if (!file.exists(str_c(folder, "/", page_name))) {
+    content <- try(getURL(pageurl, curl = handle))
+    write(content, str_c(folder, "/", page_name))
+    Sys.sleep(1)
+  } 
+}
+
+
+get_articles <- function(links, folder) {
+  
+  l_ply(links, download.art(),
+        folder = folder,
+        handle = handle)
+  
+  art_files<-list.files(folder)
+  
+  return(art_files)
+  
+}
+
+```
+
+
+## Search aids
+
+There are search aids for *get_faz()* and *get_spiegel()*
+
+The search aids for *'Spiegel Online'* are: 
+
+- type **'topic="Merkel Obama"'** for finding reports that include
+  **Merkel AND Obama**
+
+- type **'topic="Merkel, Obama"'** for finding reports that include 
+  **Merkel OR Obama**
+  
+- type **'topic="Merkel -Obama"'** for finding reports that include 
+  **Merkel BUT NOT Obama**
+  
+- type **'topic="Merk*"'** for retrieving all articles that include a word starting with Merk, such as Merkur, Merkel etc.
+
+```{r, cache=TRUE}
+Example:
+  
+ostern_df <- get_spiegel(topic="Ostern Ei", from="01.01.2013", to="10.04.2015", area="TI", email="Your@email.com")
+
+-> now you are retrieving articles in 'Spiegel Online' containing both 'Ostern' AND 'Ei'
+```
+
+The search aids for *'FAZ Online'* are: 
+
+- type **'topic="Merkel UND Obama"'** for finding reports that include
+  **Merkel AND Obama**
+
+- type **'topic="Merkel ODER Obama"'** for finding reports that include 
+  **Merkel OR Obama**
+  
+- type **'topic="Merkel NICHT Obama"'** for finding reports that include 
+  **Merkel BUT NOT Obama**
+  
+- type **'topic="Merk*"'** for retrieving all articles that include a word starting with Merk, such as Merkur, Merkel etc.
+
+- type **'topic="*Ei"'** for retrieving all articles that include a word ending with **'Ei'** such as Oster*ei*, Feier*ei* etc. 
+
+
+# Credits
+
+As already mentioned the depicted download function is almost completely copied from:
+
+Munzert, Simon, Christian Rubba, Peter Meißner, und Dominic Nyhuis (2014): Automated Data Collection with R. A Practical Guide to Web Scraping and Text Mining for the Social Sciences. Hoboken, NJ: John Wiley & Sons. Manuskript.
+
+Besides, almost every information about web scraping applied in this package I have taken out of this book or directly learned in a course from Simon Munzert. 
+Plus Peter Meißner's short tutorial and his wp_trend manual taught me how to write this manual. 
+
+Then I can really recommend reading Hadley Wickhams book **R packages** which tought me the basic steps for building a package. It is currently availabe online: http://r-pkgs.had.co.nz/ 
+
+And last but not least, I want to thank Friedrike Preu who let me copy her find_lastp() function for accessing all Spiegel Online result pages. It is retrieved from
+
+Friedrike Preu (2014): Alle nur parteiisch? Berichterstattung im Sommer 2014 am Beispiel von SPON und Zeit Online. Universität Konstanz. Blogartikel.
+
+Thank you very, very much.
+
+
+<!-- http://www.tandfonline.com/doi/pdf/10.1080/10410236.2011.571759 -->

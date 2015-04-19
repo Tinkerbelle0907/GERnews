@@ -42,14 +42,14 @@ Hadley Wickham (2015): R Packages. O'Reilly Media. URL http://r-pkgs.had.co.nz/~
 ~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
 }
 \examples{
-~~  flucht1_df <- get_spiegel(topic="Flucht", from="01.01.15", to="08.04.15", area="kopftext", email="Your@email.com")
+~~  get_spiegel(topic="Flucht", from="01.01.15", to="08.04.15", area="kopftext", email="Your@email.com")
 
-flucht1_df <- get_spiegel(topic="Flucht", from="01.01.15", to="08.04.15", area="", email="Your@email.com")
+get_spiegel(topic="Flucht", from="01.01.15", to="08.04.15", area="", email="Your@email.com")
 
-flüchtling_df <- get_zeit(topic="Flüchtling", from="01.01.2015", to="01.02.2015", email= "Your@email.com")
+get_zeit(topic="Flüchtling", from="01.01.2015", to="01.02.2015", email= "Your@email.com")
 
-ostern1_df <- get_faz(topic="Ostern", from="01.01.2013", to="10.04.2015", area="TI", email="Your@email.com")
+get_faz(topic="Ostern", from="01.01.2013", to="10.04.2015", area="TI", email="Your@email.com")
 
-ostern2_df <- get_faz(topic="Ostern", from="01.01.2013", to="10.04.2015", area="q", email="Your@email.com")
+get_faz(topic="Ostern", from="01.01.2013", to="10.04.2015", area="q", email="Your@email.com")
 ~~
 }

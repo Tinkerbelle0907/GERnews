@@ -17,7 +17,7 @@ Imports:
       ggplot2
 Suggests: 
       testthat
-Description: GERnews simplifies online media research. It allows to access the search engines of the German online newspapers Faz, Spiegel and Zeit in RStudio and thus enables the user to scrape headlines (and articles) from the online archives. Further, the package provides sorting and visualizing the extracted informations. 
+Description: GERnews simplifies online media research. It allows to access the search engines of the German online newspapers Faz, Spiegel and Zeit in RStudio and thus enables the user to scrape headlines (and articles) from the online archives. 
 License: No commercial use. Feel free to copy
 BugReports: https://github.com/Tinkerbelle0907
 LazyData: true

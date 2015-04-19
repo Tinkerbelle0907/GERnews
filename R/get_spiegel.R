@@ -62,7 +62,8 @@ find_lastp<-function(url) {
   full_links <- paste("www.spiegel.de",links,sep="")
   
   nrs <- as.numeric(str_replace_all(links,
-                                    ".+pageNumber=(\\d{1,})","\\1"))
+                                    ".+pageNumber=(\\d{1,})"  
+                                    ,"\\1"))
   
   len<-length(nrs)
   
@@ -102,32 +103,23 @@ find_spiegel_links <- function(topic, from, to, area) {
 get_spiegelbasics <- function(list_parsed){
   
   headlines_spiegel <- c(paste(xpathSApply(list_parsed,
-                                           "//div[@class='search
-                                           -teaser']/descendant
-                                           ::span[@class='headline
-                                           -intro']",
+                                           "//div[@class='search-teaser']/descendant::span[@class='headline-intro']",
                                            xmlValue), 
                                xpathSApply(list_parsed,
-                                           "//div[@class='search
-                                           -teaser']/descendant
-                                           ::span[@class='headline']",
+                                           "//div[@class='search-teaser']/descendant::span[@class='headline']",
                                            xmlValue), sep=" " ))
   
   source.date <- xpathSApply(list_parsed,
-                             "//div[@class='search-teaser']/descendant
-                             ::span[@class='source-date']",xmlValue)
+                             "//div[@class='search-teaser']/descendant::span[@class='source-date']",xmlValue)
   
   date_spiegel<-c(str_extract(source.date, 
-                              "[[:digit:]][[:digit:]].[[:digit:]]
-                              .{2}[[:digit:]][[:digit:]][[:digit:]][[
-                              :digit:]]"))
+                              "[[:digit:]][[:digit:]].[[:digit:]].{2}[[:digit:]][[:digit:]][[:digit:]][[:digit:]]"))
   
   links_spiegel<-c(xpathSApply(list_parsed,
-                               "//p[@class='article-intro']/descendant
-                               ::a",xmlGetAttr,"href"))
+                               "//p[@class='article-intro']/descendant::a",xmlGetAttr,"href"))
   
-  spiegel_df<-data.frame(headlines_spiegel,
-                         date_spiegel, links_spiegel)
+  spiegel_df <- data.frame(cbind(headlines_spiegel,
+                         date_spiegel, links_spiegel))
   
   colnames(spiegel_df) <- c("headlines", "dates", "links")
   rm(headlines_spiegel, date_spiegel, links_spiegel)
