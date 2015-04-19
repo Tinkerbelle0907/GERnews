@@ -1,14 +1,8 @@
----
-title: Introducing GERnews -Easy acces to German online newspapers
+
+##Introducing GERnews -Easy acces to German online newspapers
   
 author: "Isabelle Bonenkamp"
-output:
-  html_document:
-    keep_md: yes
-    self_contained: no
----
 
-`r Sys.Date()`
 
 ## Introduction
 
